@@ -3,33 +3,25 @@ import SwiftUI
 
 @MainActor
 final class TimerModel: ObservableObject {
-    enum Mode: String, CaseIterable, Identifiable {
+    enum Mode: String, Identifiable, CaseIterable {
         case focus
-        case shortBreak
-        case longBreak
-        case custom
+        case breakTime
 
         var id: String { rawValue }
 
         var displayName: String {
             switch self {
             case .focus: return "Focus"
-            case .shortBreak: return "Short Break"
-            case .longBreak: return "Long Break"
-            case .custom: return "Custom"
+            case .breakTime: return "Break"
             }
         }
 
         var completionMessage: String {
             switch self {
             case .focus:
-                return "Focus session complete! Time for a break."
-            case .shortBreak:
-                return "Short break wrapped up. Ready to refocus?"
-            case .longBreak:
-                return "Long break finished. Back to the iceberg!"
-            case .custom:
-                return "Custom timer finished."
+                return "Focus session complete! Enjoy your break."
+            case .breakTime:
+                return "Break finished! Ready to refocus?"
             }
         }
     }
@@ -43,7 +35,7 @@ final class TimerModel: ObservableObject {
     @Published private(set) var currentMode: Mode
     @Published private(set) var state: State = .idle
     @Published private(set) var remaining: Int
-    @Published private var durationMinutes: [Mode: Int]
+    @Published private var durationSeconds: [Mode: Int]
     @Published private(set) var cyclesCompleted: Int = 0
 
     private var timer: DispatchSourceTimer?
@@ -56,21 +48,21 @@ final class TimerModel: ObservableObject {
         self.soundPlayer = soundPlayer
 
         var defaults: [Mode: Int] = [:]
-        defaults[.focus] = 25
-        defaults[.shortBreak] = 5
-        defaults[.longBreak] = 15
-        defaults[.custom] = 20
+        defaults[.focus] = 25 * 60
+        defaults[.breakTime] = 5 * 60
 
-        durationMinutes = defaults
+        durationSeconds = defaults
         currentMode = .focus
-        remaining = (defaults[.focus] ?? 25) * 60
+        remaining = defaults[.focus] ?? 25 * 60
     }
 
     var menuBarLabel: String {
         switch state {
         case .running:
             return "🐧 " + formattedRemaining
-        case .paused, .idle:
+        case .paused:
+            return "🐧 Paused"
+        case .idle:
             return "🐧 Idle"
         }
     }
@@ -81,19 +73,10 @@ final class TimerModel: ObservableObject {
         return String(format: "%02d:%02d", minutes, seconds)
     }
 
-    func setMode(_ mode: Mode) {
-        guard mode != currentMode else { return }
-        cancelTimer()
-        notificationManager.cancelPending()
-        currentMode = mode
-        remaining = duration(for: mode) * 60
-        state = .idle
-    }
-
     func start() {
         guard state != .running else { return }
         if remaining <= 0 {
-            remaining = duration(for: currentMode) * 60
+            remaining = duration(for: currentMode)
         }
         notificationManager.cancelPending()
         notificationManager.scheduleTimerNotification(after: remaining, message: currentMode.completionMessage)
@@ -110,28 +93,28 @@ final class TimerModel: ObservableObject {
 
     func reset() {
         cancelTimer()
-        remaining = duration(for: currentMode) * 60
+        remaining = duration(for: currentMode)
         state = .idle
         notificationManager.cancelPending()
     }
 
-    func quickStart(_ minutes: Int) {
-        updateDuration(for: .custom, minutes: minutes)
-        currentMode = .custom
-        remaining = minutes * 60
+    func stop() {
+        cancelTimer()
+        remaining = duration(for: .focus)
+        currentMode = .focus
         state = .idle
-        start()
+        notificationManager.cancelPending()
     }
 
     func duration(for mode: Mode) -> Int {
-        max(1, durationMinutes[mode] ?? 1)
+        max(1, durationSeconds[mode] ?? 60)
     }
 
-    func updateDuration(for mode: Mode, minutes: Int) {
-        let clamped = max(1, minutes)
-        durationMinutes[mode] = clamped
-        if mode == currentMode && state != .running {
-            remaining = clamped * 60
+    func updateDuration(for mode: Mode, seconds: Int) {
+        let clamped = max(1, seconds)
+        durationSeconds[mode] = clamped
+        if mode == currentMode && state == .idle {
+            remaining = clamped
         }
     }
 
@@ -166,14 +149,24 @@ final class TimerModel: ObservableObject {
         notificationManager.deliverCompletionNotification(message: currentMode.completionMessage)
         if currentMode == .focus {
             cyclesCompleted += 1
+            beginBreakSession()
+        } else {
+            currentMode = .focus
+            remaining = duration(for: .focus)
+            state = .idle
         }
-        remaining = duration(for: currentMode) * 60
-        state = .idle
     }
 
     private func cancelTimer() {
         timer?.setEventHandler {}
         timer?.cancel()
         timer = nil
+    }
+
+    private func beginBreakSession() {
+        currentMode = .breakTime
+        remaining = duration(for: .breakTime)
+        state = .idle
+        start()
     }
 }
