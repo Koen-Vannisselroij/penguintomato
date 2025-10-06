@@ -21,7 +21,7 @@ final class TimerModel: ObservableObject {
             case .focus:
                 return "Focus session complete! Enjoy your break."
             case .breakTime:
-                return "Break finished! Ready to refocus?"
+                return "Break finished! Time to climb the next iceberg!"
             }
         }
     }
