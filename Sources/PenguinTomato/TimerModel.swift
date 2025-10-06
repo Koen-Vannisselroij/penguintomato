@@ -59,11 +59,22 @@ final class TimerModel: ObservableObject {
     var menuBarLabel: String {
         switch state {
         case .running:
-            return "🐧 " + formattedRemaining
+            return formattedRemaining
         case .paused:
-            return "🐧 Paused"
+            return "Paused"
         case .idle:
-            return "🐧 Idle"
+            return currentMode == .breakTime ? "Break ready" : "Idle"
+        }
+    }
+
+    var menuBarIconName: String {
+        switch state {
+        case .running:
+            return currentMode == .focus ? "MenuBarFocus" : "MenuBarBreak"
+        case .paused:
+            return "MenuBarPaused"
+        case .idle:
+            return currentMode == .breakTime ? "MenuBarBreak" : "MenuBarIdle"
         }
     }
 

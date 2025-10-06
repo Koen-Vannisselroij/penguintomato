@@ -14,8 +14,25 @@ struct PenguinTomatoApp: App {
                 .environmentObject(model)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         } label: {
-            Text(model.menuBarLabel)
+            HStack(spacing: 6) {
+                menuBarIcon
+                    .renderingMode(.original)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 18, height: 18)
+                Text(model.menuBarLabel)
+            }
         }
         .menuBarExtraStyle(.window)
+    }
+}
+
+private extension PenguinTomatoApp {
+    var menuBarIcon: Image {
+        let name = model.menuBarIconName
+        if let image = Bundle.module.image(forResource: name) {
+            return Image(nsImage: image)
+        }
+        return Image(systemName: "timer")
     }
 }
