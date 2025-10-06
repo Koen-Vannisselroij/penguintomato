@@ -374,13 +374,13 @@ private extension ContentView {
                     }
                 )
             } else {
-                return AnyView(StatusChip(text: "Break", color: Palette.beakOrange.opacity(0.85), iconSystemName: "cup.and.saucer.fill", textColor: Palette.outlineBrown))
+                return AnyView(StatusChip(text: "Break", color: Palette.beakOrange.opacity(0.85), assetName: "BreakPenguin", textColor: Palette.outlineBrown))
             }
         case .paused:
             return AnyView(StatusChip(text: "Paused", color: Palette.cheekPink, iconSystemName: "pause.circle"))
         case .idle:
             if model.currentMode == .breakTime {
-                return AnyView(StatusChip(text: "Break ready", color: Palette.beakOrange.opacity(0.5), iconSystemName: "cup.and.saucer", textColor: Palette.outlineBrown))
+                return AnyView(StatusChip(text: "Break ready", color: Palette.beakOrange.opacity(0.5), assetName: "BreakPenguin", textColor: Palette.outlineBrown))
             }
             return AnyView(StatusChip(text: "Idle", color: Palette.creamWhite.opacity(0.9), assetName: "SleepingPenguin", textColor: Palette.outlineBrown))
         }
@@ -417,6 +417,9 @@ private extension ContentView {
             }
             return Image(systemName: "bolt.fill")
         case .breakTime:
+            if let image = Bundle.module.image(forResource: "BreakPenguin") {
+                return Image(nsImage: image)
+            }
             return Image(systemName: "cup.and.saucer.fill")
         }
     }

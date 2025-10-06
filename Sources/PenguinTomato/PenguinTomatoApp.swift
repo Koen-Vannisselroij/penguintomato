@@ -14,11 +14,11 @@ struct PenguinTomatoApp: App {
                 .environmentObject(model)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         } label: {
-            HStack(spacing: 6) {
+            HStack(spacing: 8) {
                 menuBarIcon
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 18, height: 18)
+                    .frame(width: 22, height: 22)
                 Text(model.menuBarLabel)
             }
             .foregroundColor(.primary)
@@ -32,7 +32,7 @@ private extension PenguinTomatoApp {
         let name = model.menuBarIconName
         if let nsImage = Bundle.module.image(forResource: name) {
             nsImage.isTemplate = true
-            nsImage.size = NSSize(width: 18, height: 18)
+            nsImage.size = NSSize(width: 22, height: 22)
             return Image(nsImage: nsImage)
         }
         return Image(systemName: "timer")
