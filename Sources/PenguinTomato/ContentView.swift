@@ -257,7 +257,7 @@ private struct DisclosureDurationEditor: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Button(action: { isExpanded.toggle() }) {
+            Button(action: { withAnimation(.easeInOut(duration: 0.15)) { isExpanded.toggle() } }) {
                 HStack {
                     Text(title)
                         .font(.headline)
@@ -283,53 +283,39 @@ private struct DisclosureDurationEditor: View {
             .buttonStyle(.plain)
             .help(detail)
 
-            if isExpanded {
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack(spacing: 12) {
-                        TextField("mm:ss", text: $text)
-                            .textFieldStyle(.plain)
-                            .font(.title3.monospacedDigit().weight(.semibold))
-                            .multilineTextAlignment(.center)
-                            .padding(.vertical, 10)
-                            .padding(.horizontal, 16)
-                            .background(
-                                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                    .fill(Palette.creamWhite)
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                    .stroke(isInvalid ? Color.red.opacity(0.8) : Palette.outlineLight.opacity(0.25), lineWidth: 1)
-                            )
-                            .onSubmit(onCommit)
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 12) {
+                    TextField("mm:ss", text: $text)
+                        .textFieldStyle(.plain)
+                        .font(.title3.monospacedDigit().weight(.semibold))
+                        .multilineTextAlignment(.center)
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .fill(Palette.creamWhite)
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .stroke(isInvalid ? Color.red.opacity(0.8) : Palette.outlineLight.opacity(0.25), lineWidth: 1)
+                        )
+                        .onSubmit(onCommit)
 
-                        Button("Apply") {
-                            onCommit()
-                        }
-                        .buttonStyle(SecondaryActionButtonStyle(strokeColor: Palette.outlineLight, fillColor: Palette.backgroundDark))
+                    Button("Apply") {
+                        onCommit()
                     }
+                    .buttonStyle(SecondaryActionButtonStyle(strokeColor: Palette.outlineLight, fillColor: Palette.backgroundDark))
                 }
-                .transition(.opacity)
             }
+            .opacity(isExpanded ? 1 : 0)
+            .frame(maxHeight: isExpanded ? .infinity : 0, alignment: .top)
+            .clipped()
         }
     }
 }
 
 private extension ContentView {
-    @ViewBuilder
-    var statusChip: some View {
-        switch (model.state, model.currentMode) {
-        case (.running, .focus):
-            largePenguinStatus(iconName: "FocusPenguin", title: "Focus")
-        case (.running, .breakTime):
-            largePenguinStatus(iconName: "BreakPenguin", title: "Break")
-        case (.paused, _):
-            largePenguinStatus(iconName: "PausePenguin", title: "Paused")
-        case (.idle, .breakTime):
-            largePenguinStatus(iconName: "BreakPenguin", title: "Break ready")
-        case (.idle, _):
-            largePenguinStatus(iconName: "SleepingPenguin", title: "Idle")
-        }
-    }
+    
 
 
     func applyDuration(for mode: TimerModel.Mode) {
