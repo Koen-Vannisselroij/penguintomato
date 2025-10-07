@@ -4,7 +4,7 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject private var model: TimerModel
 
-    private let accentPrimary = Palette.buttonBlue
+    private let accentPrimary = Palette.buttonPrimary
     private let accentSecondary = Palette.textPrimary
     private let cardBackground = Palette.creamWhite.opacity(0.85)
 
@@ -141,13 +141,13 @@ struct ContentView: View {
             Button("Stop") {
                 model.stop()
             }
-            .buttonStyle(DestructiveActionButtonStyle(color: Palette.buttonStop))
+            .buttonStyle(DestructiveActionButtonStyle(color: Palette.buttonSecondary))
             .disabled(model.state != .running)
 
             Button("Reset") {
                 model.reset()
             }
-            .buttonStyle(SecondaryActionButtonStyle(strokeColor: Palette.outlineLight, fillColor: Color.clear))
+            .buttonStyle(SecondaryActionButtonStyle(strokeColor: Palette.outlineLight, fillColor: Palette.backgroundDark))
         }
     }
 }
@@ -310,11 +310,11 @@ private struct DurationEditorRow: View {
                     Spacer()
 
                     Capsule()
-                        .fill(Palette.buttonBlue.opacity(0.15))
+                        .fill(Palette.buttonPrimary.opacity(0.15))
                         .overlay(
                             Text(summary)
                                 .font(.callout.monospacedDigit())
-                                .foregroundColor(Palette.buttonBlue)
+                                .foregroundColor(Palette.buttonPrimary)
                                 .padding(.horizontal, 12)
                         )
                         .frame(height: 30)
@@ -348,7 +348,7 @@ private struct DurationEditorRow: View {
                     Button("Apply") {
                         onCommit()
                     }
-                    .buttonStyle(SecondaryActionButtonStyle(strokeColor: Palette.outlineLight, fillColor: Color.clear))
+                    .buttonStyle(SecondaryActionButtonStyle(strokeColor: Palette.outlineLight, fillColor: Palette.backgroundDark))
                 }
                 .transition(.opacity.combined(with: .move(edge: .top)))
             }
@@ -475,14 +475,14 @@ private extension ContentView {
 }
 
 private enum Palette {
-    static let penguinBlack = Color(red: 36/255, green: 40/255, blue: 38/255)
-    static let backgroundDark = Color(red: 50/255, green: 54/255, blue: 52/255)
-    static let creamWhite = Color(red: 68/255, green: 72/255, blue: 70/255)
+    static let penguinBlack = Color(red: 32/255, green: 36/255, blue: 34/255)
+    static let backgroundDark = Color(red: 46/255, green: 50/255, blue: 48/255)
+    static let creamWhite = Color(red: 62/255, green: 66/255, blue: 64/255)
     static let beakOrange = Color(red: 247/255, green: 164/255, blue: 76/255)
     static let cheekPink = Color(red: 248/255, green: 184/255, blue: 168/255)
-    static let buttonBlue = Color(red: 0/255, green: 122/255, blue: 255/255)
-    static let buttonStop = Color(red: 82/255, green: 96/255, blue: 122/255)
+    static let buttonPrimary = Color(red: 94/255, green: 108/255, blue: 126/255)
+    static let buttonSecondary = Color(red: 72/255, green: 84/255, blue: 100/255)
     static let leafGreen = Color(red: 108/255, green: 162/255, blue: 118/255)
-    static let outlineLight = Color.white
-    static let textPrimary = Color.white.opacity(0.9)
+    static let outlineLight = Color.white.opacity(0.7)
+    static let textPrimary = Color.white.opacity(0.92)
 }
