@@ -256,60 +256,60 @@ private struct DisclosureDurationEditor: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Button(action: { withAnimation(.easeInOut(duration: 0.15)) { isExpanded.toggle() } }) {
-                HStack {
-                    Text(title)
-                        .font(.headline)
-                        .foregroundColor(Palette.textPrimary)
+        Button(action: { isExpanded.toggle() }) {
+            HStack {
+                Text(title)
+                    .font(.headline)
+                    .foregroundColor(Palette.textPrimary)
 
-                    Spacer()
+                Spacer()
 
-                    Capsule()
-                        .fill(Palette.buttonPrimary.opacity(0.15))
-                        .overlay(
-                            Text(summary)
-                                .font(.callout.monospacedDigit())
-                                .foregroundColor(Palette.buttonPrimary)
-                                .padding(.horizontal, 12)
-                        )
-                        .frame(height: 30)
+                Capsule()
+                    .fill(Palette.buttonPrimary.opacity(0.15))
+                    .overlay(
+                        Text(summary)
+                            .font(.callout.monospacedDigit())
+                            .foregroundColor(Palette.buttonPrimary)
+                            .padding(.horizontal, 12)
+                    )
+                    .frame(height: 30)
 
-                    Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                        .foregroundColor(Palette.textPrimary.opacity(0.6))
-                }
-                .contentShape(Rectangle())
+                Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                    .foregroundColor(Palette.textPrimary.opacity(0.6))
             }
-            .buttonStyle(.plain)
-            .help(detail)
-
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .help(detail)
+        .popover(isPresented: $isExpanded, arrowEdge: .bottom) {
             VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 12) {
-                    TextField("mm:ss", text: $text)
-                        .textFieldStyle(.plain)
-                        .font(.title3.monospacedDigit().weight(.semibold))
-                        .multilineTextAlignment(.center)
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .fill(Palette.creamWhite)
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .stroke(isInvalid ? Color.red.opacity(0.8) : Palette.outlineLight.opacity(0.25), lineWidth: 1)
-                        )
-                        .onSubmit(onCommit)
-
-                    Button("Apply") {
+                TextField("mm:ss", text: $text)
+                    .textFieldStyle(.plain)
+                    .font(.title3.monospacedDigit().weight(.semibold))
+                    .multilineTextAlignment(.center)
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .fill(Palette.creamWhite)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .stroke(isInvalid ? Color.red.opacity(0.8) : Palette.outlineLight.opacity(0.25), lineWidth: 1)
+                    )
+                    .onSubmit {
                         onCommit()
+                        isExpanded = false
                     }
-                    .buttonStyle(SecondaryActionButtonStyle(strokeColor: Palette.outlineLight, fillColor: Palette.backgroundDark))
+
+                Button("Apply") {
+                    onCommit()
+                    isExpanded = false
                 }
+                .buttonStyle(SecondaryActionButtonStyle(strokeColor: Palette.outlineLight, fillColor: Palette.backgroundDark))
             }
-            .opacity(isExpanded ? 1 : 0)
-            .frame(maxHeight: isExpanded ? .infinity : 0, alignment: .top)
-            .clipped()
+            .padding(16)
+            .frame(width: 240)
         }
     }
 }
