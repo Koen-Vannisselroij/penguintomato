@@ -47,7 +47,7 @@ struct ContentView: View {
                 modeIcon(for: model.currentMode)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 84, height: 84)
+                    .frame(width: Palette.statusIconSize, height: Palette.statusIconSize)
 
                 Text(model.currentMode.displayName)
                     .font(.headline)
@@ -219,41 +219,6 @@ private struct DestructiveActionButtonStyle: ButtonStyle {
     }
 }
 
-private struct StatusChip: View {
-    let text: String
-    let color: Color
-    var iconSystemName: String? = nil
-    var assetName: String? = nil
-    var textColor: Color = Palette.textPrimary
-    var useBackground: Bool = true
-
-    var body: some View {
-        HStack(spacing: 8) {
-            if let assetName,
-               let image = Bundle.module.image(forResource: assetName) {
-                Image(nsImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 72, height: 72)
-            } else if let iconSystemName {
-                Image(systemName: iconSystemName)
-            }
-
-            Text(text)
-                .font(.footnote.weight(.semibold))
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
-        .foregroundColor(textColor)
-        .background {
-            if useBackground {
-                Capsule()
-                    .fill(color)
-            }
-        }
-    }
-}
-
 private struct FocusCyclesCount: View {
     let count: Int
 
@@ -277,7 +242,7 @@ private struct FocusCyclesCount: View {
         if let image = Bundle.module.image(forResource: "FocusBadge") {
             Image(nsImage: image)
                 .resizable()
-                .frame(width: 72, height: 72)
+                .frame(width: Palette.statusIconSize, height: Palette.statusIconSize)
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         } else {
             Text("🐟")
@@ -364,17 +329,17 @@ private extension ContentView {
         switch model.state {
         case .running:
             if model.currentMode == .focus {
-                return AnyView(largePenguinStatus(iconName: "FocusPenguin", title: "Focus"))
+                return AnyView(largePenguinStatus(iconName: "FocusPenguin", title: "Focus", useBackground: true))
             } else {
-                return AnyView(largePenguinStatus(iconName: "BreakPenguin", title: "Break"))
+                return AnyView(largePenguinStatus(iconName: "BreakPenguin", title: "Break", useBackground: true))
             }
         case .paused:
-            return AnyView(largePenguinStatus(iconName: "PausePenguin", title: "Paused", size: 72))
+            return AnyView(largePenguinStatus(iconName: "PausePenguin", title: "Paused", useBackground: true))
         case .idle:
             if model.currentMode == .breakTime {
-                return AnyView(largePenguinStatus(iconName: "BreakPenguin", title: "Break ready", size: 72))
+                return AnyView(largePenguinStatus(iconName: "BreakPenguin", title: "Break ready", useBackground: true))
             }
-            return AnyView(StatusChip(text: "Idle", color: Palette.backgroundDark.opacity(0.6), assetName: "SleepingPenguin", textColor: Palette.textPrimary, useBackground: false))
+            return AnyView(largePenguinStatus(iconName: "SleepingPenguin", title: "Idle", useBackground: false))
         }
     }
 
@@ -416,8 +381,9 @@ private extension ContentView {
         }
     }
 
-    func largePenguinStatus(iconName: String, title: String, size: CGFloat = 84) -> some View {
-        HStack(spacing: 8) {
+    func largePenguinStatus(iconName: String, title: String, useBackground: Bool = false) -> some View {
+        let size: CGFloat = Palette.statusIconSize
+        return HStack(spacing: 12) {
             if let image = Bundle.module.image(forResource: iconName) {
                 Image(nsImage: image)
                     .resizable()
@@ -428,6 +394,14 @@ private extension ContentView {
             Text(title)
                 .font(.headline)
                 .foregroundColor(Palette.textPrimary)
+        }
+        .padding(.horizontal, useBackground ? 12 : 0)
+        .padding(.vertical, useBackground ? 8 : 0)
+        .background {
+            if useBackground {
+                Capsule()
+                    .fill(Palette.backgroundDark.opacity(0.6))
+            }
         }
     }
 
@@ -488,4 +462,5 @@ private enum Palette {
     static let leafGreen = Color(red: 108/255, green: 162/255, blue: 118/255)
     static let outlineLight = Color.white.opacity(0.7)
     static let textPrimary = Color.white.opacity(0.92)
+    static let statusIconSize: CGFloat = 84
 }
