@@ -329,17 +329,17 @@ private extension ContentView {
         switch model.state {
         case .running:
             if model.currentMode == .focus {
-                return AnyView(largePenguinStatus(iconName: "FocusPenguin", title: "Focus", useBackground: true))
+                return AnyView(largePenguinStatus(iconName: "FocusPenguin", title: "Focus"))
             } else {
-                return AnyView(largePenguinStatus(iconName: "BreakPenguin", title: "Break", useBackground: true))
+                return AnyView(largePenguinStatus(iconName: "BreakPenguin", title: "Break"))
             }
         case .paused:
-            return AnyView(largePenguinStatus(iconName: "PausePenguin", title: "Paused", useBackground: true))
+            return AnyView(largePenguinStatus(iconName: "PausePenguin", title: "Paused"))
         case .idle:
             if model.currentMode == .breakTime {
-                return AnyView(largePenguinStatus(iconName: "BreakPenguin", title: "Break ready", useBackground: true))
+                return AnyView(largePenguinStatus(iconName: "BreakPenguin", title: "Break ready"))
             }
-            return AnyView(largePenguinStatus(iconName: "SleepingPenguin", title: "Idle", useBackground: false))
+            return AnyView(largePenguinStatus(iconName: "SleepingPenguin", title: "Idle"))
         }
     }
 
@@ -381,7 +381,7 @@ private extension ContentView {
         }
     }
 
-    func largePenguinStatus(iconName: String, title: String, useBackground: Bool = false) -> some View {
+    func largePenguinStatus(iconName: String, title: String) -> some View {
         let size: CGFloat = Palette.statusIconSize
         return HStack(spacing: 12) {
             if let image = Bundle.module.image(forResource: iconName) {
@@ -394,14 +394,6 @@ private extension ContentView {
             Text(title)
                 .font(.headline)
                 .foregroundColor(Palette.textPrimary)
-        }
-        .padding(.horizontal, useBackground ? 12 : 0)
-        .padding(.vertical, useBackground ? 8 : 0)
-        .background {
-            if useBackground {
-                Capsule()
-                    .fill(Palette.backgroundDark.opacity(0.6))
-            }
         }
     }
 
