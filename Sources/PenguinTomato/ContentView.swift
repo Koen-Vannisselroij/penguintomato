@@ -300,7 +300,7 @@ private struct DurationEditorRow: View {
                     }
                     .buttonStyle(SecondaryActionButtonStyle(strokeColor: Palette.outlineLight, fillColor: Palette.backgroundDark))
                 }
-                .transition(.opacity.combined(with: .move(edge: .top)))
+                .transition(.opacity)
             }
         }
     }
