@@ -24,10 +24,6 @@ There is not really a reason, I like penguins and needed a pomodoro timer that I
 3. Build and run (`Command + R`) to launch the app with live previews of the timers and penguin artwork.
 4. Grant notification permission on first launch to receive completion alerts.
 
-<p align="center">
-  <img src="Sources/PenguinTomato/Resources/break_penguin.png" alt="Break penguin" width="200" />
-</p>
-
 ## Running Tests
 - Execute the unit test suite from the command line with `swift test`.
 - Or run the `PenguinTomatoTests` scheme inside Xcode for integrated reporting.
@@ -43,6 +39,23 @@ The penguin illustrations and sound live under `Sources/PenguinTomato/Resources/
 - `sleeping_penguin.png` — idle indicator.
 - `emperor_penguin_trumpet.mp3` — celebratory completion jingle.
 
+## Distributing to Friends
+1. Archive the app from Xcode (`Product > Archive`) using a Developer ID certificate.
+2. Notarize the resulting build (`xcrun notarytool submit --wait`).
+3. Staple the notarization ticket (`xcrun stapler staple PenguinTomato.app`).
+4. Share the signed `.app` or `.dmg`; recipients on other Macs can open it without Gatekeeper warnings.
+
+If you prefer TestFlight-style distribution, create a Swift package release or host the notarized build on a trusted file share.
+
+## Contributing
+Questions, feature ideas, or penguin art contributions are welcome! Fork the repository, create a branch, and submit a pull request with a clear description and screenshots where relevant.
+
+## License
+This project currently has no explicit license. Please treat it as all rights reserved until a license is added.
+
 <p align="center">
-  <img src="Sources/PenguinTomato/Resources/sleeping_penguin.png" alt="Sleeping penguin" width="200" />
+  <img src="Sources/PenguinTomato/Resources/focussed_penguin.png" alt="Focus penguin" width="150" style="margin:0 10px;" />
+  <img src="Sources/PenguinTomato/Resources/break_penguin.png" alt="Break penguin" width="150" style="margin:0 10px;" />
+  <img src="Sources/PenguinTomato/Resources/pause_penguin.png" alt="Pause penguin" width="150" style="margin:0 10px;" />
+  <img src="Sources/PenguinTomato/Resources/sleeping_penguin.png" alt="Sleeping penguin" width="150" style="margin:0 10px;" />
 </p>
