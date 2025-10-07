@@ -6,7 +6,7 @@ struct ContentView: View {
 
     private let accentPrimary = Palette.tomatoRed
     private let accentSecondary = Palette.outlineBrown
-    private let cardBackground = Palette.creamWhite.opacity(0.94)
+    private let cardBackground = Palette.creamWhite.opacity(0.92)
 
     @State private var expandedEditor: TimerModel.Mode? = .focus
     @State private var editorText: [TimerModel.Mode: String] = [:]
@@ -14,7 +14,7 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            LinearGradient(colors: [Palette.creamWhite, Color.white], startPoint: .top, endPoint: .bottom)
+            LinearGradient(colors: [Palette.backgroundDark, Palette.creamWhite], startPoint: .top, endPoint: .bottom)
                 .ignoresSafeArea()
 
             VStack(spacing: 24) {
@@ -476,11 +476,12 @@ private extension ContentView {
 }
 
 private enum Palette {
-    static let penguinBlack = Color(red: 59/255, green: 48/255, blue: 44/255)
-    static let creamWhite = Color(red: 1.0, green: 246/255, blue: 232/255)
+    static let penguinBlack = Color(red: 42/255, green: 47/255, blue: 43/255)
+    static let backgroundDark = Color(red: 46/255, green: 52/255, blue: 47/255)
+    static let creamWhite = Color(red: 71/255, green: 77/255, blue: 72/255)
     static let beakOrange = Color(red: 247/255, green: 164/255, blue: 76/255)
     static let cheekPink = Color(red: 248/255, green: 184/255, blue: 168/255)
-    static let tomatoRed = Color(red: 228/255, green: 71/255, blue: 46/255)
-    static let leafGreen = Color(red: 76/255, green: 122/255, blue: 58/255)
-    static let outlineBrown = Color(red: 77/255, green: 59/255, blue: 51/255)
+    static let tomatoRed = Color(nsColor: .controlAccentColor)
+    static let leafGreen = Color(red: 108/255, green: 162/255, blue: 118/255)
+    static let outlineBrown = Color(red: 230/255, green: 233/255, blue: 231/255)
 }
