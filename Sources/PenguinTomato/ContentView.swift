@@ -19,13 +19,13 @@ struct ContentView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 24) {
-                VStack(spacing: 24) {
-                    penguinCard
-                    durationSection
-                }
-                .padding(.horizontal, 24)
-                .padding(.top, 24)
+                penguinCard
+                    .padding(.horizontal, 24)
+                    .padding(.top, 24)
 
+                durationSection
+                    .padding(.horizontal, 24)
+            
                 controlSection
                     .padding(.horizontal, 24)
                     .padding(.bottom, 24)
