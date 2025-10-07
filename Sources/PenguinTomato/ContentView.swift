@@ -63,7 +63,7 @@ struct ContentView: View {
 
     @ViewBuilder
     private var penguinImage: some View {
-        if let image = Bundle.module.image(forResource: "PenguinBelly") {
+        if let image = Bundle.module.penguinImage(named: "PenguinBelly") {
             Image(nsImage: image)
                 .resizable()
                 .scaledToFit()
@@ -216,7 +216,7 @@ private struct FocusCyclesCount: View {
 
     var body: some View {
         VStack(spacing: 8) {
-            if let image = Bundle.module.image(forResource: "FocusBadge") {
+            if let image = Bundle.module.penguinImage(named: "FocusBadge") {
                 Image(nsImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -348,12 +348,12 @@ private extension ContentView {
     func modeIcon(for mode: TimerModel.Mode) -> Image {
         switch mode {
         case .focus:
-            if let image = Bundle.module.image(forResource: "FocusPenguin") {
+            if let image = Bundle.module.penguinImage(named: "FocusPenguin") {
                 return Image(nsImage: image)
             }
             return Image(systemName: "bolt.fill")
         case .breakTime:
-            if let image = Bundle.module.image(forResource: "BreakPenguin") {
+            if let image = Bundle.module.penguinImage(named: "BreakPenguin") {
                 return Image(nsImage: image)
             }
             return Image(systemName: "cup.and.saucer.fill")
@@ -363,7 +363,7 @@ private extension ContentView {
     func largePenguinStatus(iconName: String, title: String) -> some View {
         let size: CGFloat = Palette.statusIconSize
         return VStack(spacing: 8) {
-            if let image = Bundle.module.image(forResource: iconName) {
+            if let image = Bundle.module.penguinImage(named: iconName) {
                 Image(nsImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)

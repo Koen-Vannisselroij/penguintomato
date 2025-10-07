@@ -21,9 +21,10 @@ final class NotificationManager {
 
     func requestAuthorization() {
         guard let center = notificationCenter else { return }
-        center.requestAuthorization(options: [.alert, .sound]) { _, error in
-            guard let error else { return }
-            Task { @MainActor in
+        Task { @MainActor in
+            do {
+                _ = try await center.requestAuthorization(options: [.alert, .sound])
+            } catch {
                 NSLog("PenguinTomato notifications authorization error: \(error.localizedDescription)")
             }
         }
@@ -38,9 +39,10 @@ final class NotificationManager {
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(seconds), repeats: false)
         let request = UNNotificationRequest(identifier: timerIdentifier, content: content, trigger: trigger)
-        center.add(request) { error in
-            guard let error else { return }
-            Task { @MainActor in
+        Task { @MainActor in
+            do {
+                try await center.add(request)
+            } catch {
                 NSLog("PenguinTomato notifications schedule error: \(error.localizedDescription)")
             }
         }
@@ -59,9 +61,10 @@ final class NotificationManager {
         content.sound = .default
 
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
-        center.add(request) { error in
-            guard let error else { return }
-            Task { @MainActor in
+        Task { @MainActor in
+            do {
+                try await center.add(request)
+            } catch {
                 NSLog("PenguinTomato notifications delivery error: \(error.localizedDescription)")
             }
         }
