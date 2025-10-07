@@ -208,31 +208,28 @@ private struct FocusCyclesCount: View {
     let count: Int
 
     var body: some View {
-        HStack(spacing: 12) {
-            focusIcon
+        VStack(spacing: 8) {
+            if let image = Bundle.module.image(forResource: "FocusBadge") {
+                Image(nsImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: Palette.statusIconSize, height: Palette.statusIconSize)
+            } else {
+                Text("🐧")
+                    .font(.system(size: 42))
+            }
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(spacing: 2) {
                 Text("Icebergs climbed")
                     .font(.caption.weight(.medium))
+                    .multilineTextAlignment(.center)
                     .foregroundColor(Palette.textPrimary)
                 Text("\(count)")
                     .font(.title3.monospacedDigit().weight(.semibold))
                     .foregroundColor(Palette.textPrimary)
             }
         }
-    }
-
-    @ViewBuilder
-    private var focusIcon: some View {
-        if let image = Bundle.module.image(forResource: "FocusBadge") {
-            Image(nsImage: image)
-                .resizable()
-                .frame(width: Palette.statusIconSize, height: Palette.statusIconSize)
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        } else {
-            Text("🐟")
-                .font(.system(size: 42))
-        }
+        .help("Number of focus sessions you’ve completed this run")
     }
 }
 
