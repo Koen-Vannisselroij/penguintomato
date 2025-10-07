@@ -21,10 +21,15 @@ struct ContentView: View {
             VStack(spacing: 24) {
                 penguinCard
                 durationSection
-                controlSection
             }
-            .padding(24)
+            .padding(.horizontal, 24)
+            .padding(.top, 24)
             .frame(width: 360)
+
+            controlSection
+                .padding(.horizontal, 24)
+                .padding(.bottom, 24)
+                .frame(width: 360)
         }
         .tint(accentPrimary)
         .foregroundColor(accentSecondary)
