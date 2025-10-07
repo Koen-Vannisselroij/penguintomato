@@ -4,9 +4,9 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject private var model: TimerModel
 
-    private let accentPrimary = Palette.tomatoRed
-    private let accentSecondary = Palette.outlineBrown
-    private let cardBackground = Palette.creamWhite.opacity(0.92)
+    private let accentPrimary = Palette.buttonBlue
+    private let accentSecondary = Palette.textPrimary
+    private let cardBackground = Palette.creamWhite.opacity(0.85)
 
     @State private var expandedEditor: TimerModel.Mode? = .focus
     @State private var editorText: [TimerModel.Mode: String] = [:]
@@ -141,13 +141,13 @@ struct ContentView: View {
             Button("Stop") {
                 model.stop()
             }
-            .buttonStyle(DestructiveActionButtonStyle(color: accentPrimary))
+            .buttonStyle(DestructiveActionButtonStyle(color: Palette.buttonStop))
             .disabled(model.state != .running)
 
             Button("Reset") {
                 model.reset()
             }
-            .buttonStyle(SecondaryActionButtonStyle(primary: accentPrimary, outline: accentSecondary))
+            .buttonStyle(SecondaryActionButtonStyle(strokeColor: Palette.outlineLight, fillColor: Color.clear))
         }
     }
 }
@@ -167,17 +167,16 @@ private struct PrimaryActionButtonStyle: ButtonStyle {
             .padding(.vertical, 12)
             .background(
                 Capsule()
-                    .fill(color)
-                    .shadow(color: color.opacity(configuration.isPressed ? 0.12 : 0.35), radius: 12, y: 8)
+                    .fill(color.opacity(configuration.isPressed ? 0.85 : 1.0))
             )
-            .foregroundColor(Palette.creamWhite)
+            .foregroundColor(.white)
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
     }
 }
 
 private struct SecondaryActionButtonStyle: ButtonStyle {
-    let primary: Color
-    let outline: Color
+    let strokeColor: Color
+    let fillColor: Color
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -186,13 +185,13 @@ private struct SecondaryActionButtonStyle: ButtonStyle {
             .padding(.vertical, 11)
             .background(
                 Capsule()
-                    .stroke(outline, lineWidth: 2)
+                    .stroke(strokeColor, lineWidth: 2)
                     .background(
                         Capsule()
-                            .fill(primary.opacity(configuration.isPressed ? 0.22 : 0.08))
+                            .fill(fillColor.opacity(configuration.isPressed ? 0.2 : 0.08))
                     )
             )
-            .foregroundColor(outline)
+            .foregroundColor(strokeColor.opacity(configuration.isPressed ? 0.85 : 1.0))
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
     }
 }
@@ -215,7 +214,7 @@ private struct DestructiveActionButtonStyle: ButtonStyle {
     }
 
     private func opacity(for configuration: Configuration) -> Double {
-        if !isEnabled { return 0.3 }
+        if !isEnabled { return 0.25 }
         return configuration.isPressed ? 0.7 : 1.0
     }
 }
@@ -225,7 +224,7 @@ private struct StatusChip: View {
     let color: Color
     var iconSystemName: String? = nil
     var assetName: String? = nil
-    var textColor: Color = Palette.creamWhite
+    var textColor: Color = Palette.textPrimary
 
     var body: some View {
         HStack(spacing: 8) {
@@ -262,10 +261,10 @@ private struct FocusCyclesCount: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Icebergs climbed")
                     .font(.caption.weight(.medium))
-                    .foregroundColor(Palette.outlineBrown)
+                    .foregroundColor(Palette.textPrimary)
                 Text("\(count)")
                     .font(.title3.monospacedDigit().weight(.semibold))
-                    .foregroundColor(Palette.outlineBrown)
+                    .foregroundColor(Palette.textPrimary)
             }
         }
     }
@@ -306,22 +305,22 @@ private struct DurationEditorRow: View {
                 HStack {
                     Text(title)
                         .font(.headline)
-                        .foregroundColor(Palette.outlineBrown)
+                        .foregroundColor(Palette.textPrimary)
 
                     Spacer()
 
                     Capsule()
-                        .fill(Palette.tomatoRed.opacity(0.15))
+                        .fill(Palette.buttonBlue.opacity(0.15))
                         .overlay(
                             Text(summary)
                                 .font(.callout.monospacedDigit())
-                                .foregroundColor(Palette.tomatoRed)
+                                .foregroundColor(Palette.buttonBlue)
                                 .padding(.horizontal, 12)
                         )
                         .frame(height: 30)
 
                     Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                        .foregroundColor(Palette.outlineBrown.opacity(0.6))
+                        .foregroundColor(Palette.textPrimary.opacity(0.6))
                 }
                 .contentShape(Rectangle())
             }
@@ -342,14 +341,14 @@ private struct DurationEditorRow: View {
                         )
                         .overlay(
                             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .stroke(isInvalid ? Color.red.opacity(0.8) : Palette.outlineBrown.opacity(0.25), lineWidth: 1)
+                                .stroke(isInvalid ? Color.red.opacity(0.8) : Palette.outlineLight.opacity(0.25), lineWidth: 1)
                         )
                         .onSubmit(onCommit)
 
                     Button("Apply") {
                         onCommit()
                     }
-                    .buttonStyle(SecondaryActionButtonStyle(primary: Palette.tomatoRed, outline: Palette.outlineBrown))
+                    .buttonStyle(SecondaryActionButtonStyle(strokeColor: Palette.outlineLight, fillColor: Color.clear))
                 }
                 .transition(.opacity.combined(with: .move(edge: .top)))
             }
@@ -372,7 +371,7 @@ private extension ContentView {
             if model.currentMode == .breakTime {
                 return AnyView(largePenguinStatus(iconName: "BreakPenguin", title: "Break ready", size: 72))
             }
-            return AnyView(StatusChip(text: "Idle", color: Palette.creamWhite.opacity(0.9), assetName: "SleepingPenguin", textColor: Palette.outlineBrown))
+            return AnyView(StatusChip(text: "Idle", color: Palette.backgroundDark.opacity(0.6), assetName: "SleepingPenguin", textColor: Palette.textPrimary))
         }
     }
 
@@ -425,7 +424,7 @@ private extension ContentView {
 
             Text(title)
                 .font(.headline)
-                .foregroundColor(Palette.outlineBrown)
+                .foregroundColor(Palette.textPrimary)
         }
     }
 
@@ -476,12 +475,14 @@ private extension ContentView {
 }
 
 private enum Palette {
-    static let penguinBlack = Color(red: 42/255, green: 47/255, blue: 43/255)
-    static let backgroundDark = Color(red: 46/255, green: 52/255, blue: 47/255)
-    static let creamWhite = Color(red: 71/255, green: 77/255, blue: 72/255)
+    static let penguinBlack = Color(red: 36/255, green: 40/255, blue: 38/255)
+    static let backgroundDark = Color(red: 50/255, green: 54/255, blue: 52/255)
+    static let creamWhite = Color(red: 68/255, green: 72/255, blue: 70/255)
     static let beakOrange = Color(red: 247/255, green: 164/255, blue: 76/255)
     static let cheekPink = Color(red: 248/255, green: 184/255, blue: 168/255)
-    static let tomatoRed = Color(nsColor: .controlAccentColor)
+    static let buttonBlue = Color(red: 0/255, green: 122/255, blue: 255/255)
+    static let buttonStop = Color(red: 82/255, green: 96/255, blue: 122/255)
     static let leafGreen = Color(red: 108/255, green: 162/255, blue: 118/255)
-    static let outlineBrown = Color(red: 230/255, green: 233/255, blue: 231/255)
+    static let outlineLight = Color.white
+    static let textPrimary = Color.white.opacity(0.9)
 }
