@@ -32,16 +32,11 @@ struct ContentView: View {
 
     private var penguinCard: some View {
         VStack(spacing: 12) {
-            ZStack {
-                penguinImage
-                    .frame(width: 200, height: 200)
-
-                Text(model.formattedRemaining)
-                    .font(.system(size: 40, weight: .bold, design: .monospaced))
-                    .foregroundStyle(.black)
-                    .shadow(radius: 3)
-                    .accessibilityLabel("Remaining time")
-            }
+            Text(model.formattedRemaining)
+                .font(.system(size: 56, weight: .bold, design: .monospaced))
+                .foregroundColor(.white)
+                .shadow(color: .black.opacity(0.35), radius: 6, y: 2)
+                .accessibilityLabel("Remaining time")
 
             HStack(spacing: 8) {
                 modeIcon(for: model.currentMode)
@@ -54,17 +49,7 @@ struct ContentView: View {
                     .foregroundColor(accentSecondary)
             }
     }
-    .frame(maxWidth: .infinity)
-    .padding(.vertical, 20)
-    .background(
-        RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(cardBackground)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 22, style: .continuous)
-                        .stroke(Palette.penguinBlack.opacity(0.08), lineWidth: 1)
-                )
-                .shadow(color: Palette.penguinBlack.opacity(0.06), radius: 18, y: 10)
-        )
+    .padding(.vertical, 12)
     }
 
     @ViewBuilder
