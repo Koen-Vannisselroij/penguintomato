@@ -326,14 +326,12 @@ private extension ContentView {
     }
 
     func toggleEditor(_ mode: TimerModel.Mode) {
-        withAnimation(.easeInOut(duration: 0.2)) {
-            if expandedEditor == mode {
-                expandedEditor = nil
-            } else {
-                expandedEditor = mode
-                editorText[mode] = formattedDuration(for: mode)
-                invalidEditors.remove(mode)
-            }
+        if expandedEditor == mode {
+            expandedEditor = nil
+        } else {
+            expandedEditor = mode
+            editorText[mode] = formattedDuration(for: mode)
+            invalidEditors.remove(mode)
         }
     }
 
