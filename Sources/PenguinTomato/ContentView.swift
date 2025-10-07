@@ -362,25 +362,15 @@ private extension ContentView {
         switch model.state {
         case .running:
             if model.currentMode == .focus {
-                return AnyView(
-                    HStack(spacing: 8) {
-                        modeIcon(for: .focus)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 84, height: 84)
-                        Text("Focus")
-                            .font(.headline)
-                            .foregroundColor(Palette.outlineBrown)
-                    }
-                )
+                return AnyView(largePenguinStatus(iconName: "FocusPenguin", title: "Focus"))
             } else {
-                return AnyView(StatusChip(text: "Break", color: Palette.beakOrange.opacity(0.85), assetName: "BreakPenguin", textColor: Palette.outlineBrown))
+                return AnyView(largePenguinStatus(iconName: "BreakPenguin", title: "Break"))
             }
         case .paused:
-            return AnyView(StatusChip(text: "Paused", color: Palette.cheekPink, iconSystemName: "pause.circle"))
+            return AnyView(largePenguinStatus(iconName: "PausePenguin", title: "Paused", size: 72))
         case .idle:
             if model.currentMode == .breakTime {
-                return AnyView(StatusChip(text: "Break ready", color: Palette.beakOrange.opacity(0.5), assetName: "BreakPenguin", textColor: Palette.outlineBrown))
+                return AnyView(largePenguinStatus(iconName: "BreakPenguin", title: "Break ready", size: 72))
             }
             return AnyView(StatusChip(text: "Idle", color: Palette.creamWhite.opacity(0.9), assetName: "SleepingPenguin", textColor: Palette.outlineBrown))
         }
@@ -421,6 +411,21 @@ private extension ContentView {
                 return Image(nsImage: image)
             }
             return Image(systemName: "cup.and.saucer.fill")
+        }
+    }
+
+    func largePenguinStatus(iconName: String, title: String, size: CGFloat = 84) -> some View {
+        HStack(spacing: 8) {
+            if let image = Bundle.module.image(forResource: iconName) {
+                Image(nsImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: size, height: size)
+            }
+
+            Text(title)
+                .font(.headline)
+                .foregroundColor(Palette.outlineBrown)
         }
     }
 
