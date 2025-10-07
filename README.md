@@ -1,6 +1,7 @@
 # PenguinTomato 🐧
 
 PenguinTomato is a macOS Pomodoro-style focus timer that pairs structured work/break cycles with an ever-encouraging waddle of penguins. Built with SwiftUI, it lives in your menu bar and keeps sessions lighthearted but productive.
+There is not really a reason, I like penguins and needed a pomodoro timer that I can style/edit myself.
 
 <p align="center">
   <img src="Sources/PenguinTomato/Assets.xcassets/FocusPenguin.imageset/FocusPenguin.png" alt="Focus penguin" width="260" />
@@ -11,7 +12,6 @@ PenguinTomato is a macOS Pomodoro-style focus timer that pairs structured work/b
 - Automatic transitions between focus and break phases so you stay in flow.
 - Menu bar timer and status icons that mirror the in-app state.
 - Delightful penguin illustrations and celebratory sounds when sessions complete.
-- Local notifications to remind you when it is time to switch gears.
 
 ## Requirements
 - macOS 14 Sonoma or newer.
@@ -46,17 +46,3 @@ The penguin illustrations and sound live under `Sources/PenguinTomato/Resources/
 <p align="center">
   <img src="Sources/PenguinTomato/Resources/sleeping_penguin.png" alt="Sleeping penguin" width="200" />
 </p>
-
-## Distributing to Friends
-1. Archive the app from Xcode (`Product > Archive`) using a Developer ID certificate.
-2. Notarize the resulting build (`xcrun notarytool submit --wait`).
-3. Staple the notarization ticket (`xcrun stapler staple PenguinTomato.app`).
-4. Share the signed `.app` or `.dmg`; recipients on other Macs can open it without Gatekeeper warnings.
-
-If you prefer TestFlight-style distribution, create a Swift package release or host the notarized build on a trusted file share.
-
-## Contributing
-Questions, feature ideas, or penguin art contributions are welcome! Fork the repository, create a branch, and submit a pull request with a clear description and screenshots where relevant.
-
-## License
-This project currently has no explicit license. Please treat it as all rights reserved until a license is added.
