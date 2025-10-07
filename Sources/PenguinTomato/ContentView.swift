@@ -368,7 +368,7 @@ private extension ContentView {
 
     func largePenguinStatus(iconName: String, title: String) -> some View {
         let size: CGFloat = Palette.statusIconSize
-        return HStack(spacing: 12) {
+        return VStack(spacing: 8) {
             if let image = Bundle.module.image(forResource: iconName) {
                 Image(nsImage: image)
                     .resizable()
@@ -378,6 +378,7 @@ private extension ContentView {
 
             Text(title)
                 .font(.headline)
+                .multilineTextAlignment(.center)
                 .foregroundColor(Palette.textPrimary)
         }
     }
