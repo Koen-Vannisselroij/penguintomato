@@ -8,8 +8,9 @@ struct ContentView: View {
     private let accentSecondary = Palette.textPrimary
     private let cardBackground = Palette.creamWhite.opacity(0.85)
 
-    @State private var expandedEditor: TimerModel.Mode? = nil
     @State private var editorText: [TimerModel.Mode: String] = [:]
+    @State private var expandedFocus = false
+    @State private var expandedBreak = false
     @State private var invalidEditors: Set<TimerModel.Mode> = []
 
     var body: some View {
@@ -66,25 +67,23 @@ struct ContentView: View {
 
     private var durationSection: some View {
         VStack(spacing: 18) {
-            DurationEditorRow(
+            DisclosureDurationEditor(
                 title: "Focus duration",
                 detail: "Work session",
                 seconds: model.duration(for: .focus),
                 text: binding(for: .focus),
-                isExpanded: expandedEditor == .focus,
+                isExpanded: $expandedFocus,
                 isInvalid: invalidEditors.contains(.focus),
-                onToggle: { toggleEditor(.focus) },
                 onCommit: { applyDuration(for: .focus) }
             )
 
-            DurationEditorRow(
+            DisclosureDurationEditor(
                 title: "Break duration",
                 detail: "Runs automatically after focus",
                 seconds: model.duration(for: .breakTime),
                 text: binding(for: .breakTime),
-                isExpanded: expandedEditor == .breakTime,
+                isExpanded: $expandedBreak,
                 isInvalid: invalidEditors.contains(.breakTime),
-                onToggle: { toggleEditor(.breakTime) },
                 onCommit: { applyDuration(for: .breakTime) }
             )
 
@@ -233,14 +232,13 @@ private struct FocusCyclesCount: View {
     }
 }
 
-private struct DurationEditorRow: View {
+private struct DisclosureDurationEditor: View {
     let title: String
     let detail: String
     let seconds: Int
     @Binding var text: String
-    let isExpanded: Bool
+    @Binding var isExpanded: Bool
     let isInvalid: Bool
-    let onToggle: () -> Void
     let onCommit: () -> Void
 
     private var summary: String {
@@ -251,7 +249,7 @@ private struct DurationEditorRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Button(action: onToggle) {
+            Button(action: { isExpanded.toggle() }) {
                 HStack {
                     Text(title)
                         .font(.headline)
@@ -278,7 +276,7 @@ private struct DurationEditorRow: View {
             .help(detail)
 
             if isExpanded {
-                HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 12) {
                     TextField("mm:ss", text: $text)
                         .textFieldStyle(.plain)
                         .font(.title3.monospacedDigit().weight(.semibold))
@@ -295,10 +293,28 @@ private struct DurationEditorRow: View {
                         )
                         .onSubmit(onCommit)
 
-                    Button("Apply") {
-                        onCommit()
+                            HStack(spacing: 12) {
+                        TextField("mm:ss", text: $text)
+                            .textFieldStyle(.plain)
+                            .font(.title3.monospacedDigit().weight(.semibold))
+                            .multilineTextAlignment(.center)
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 16)
+                            .background(
+                                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                    .fill(Palette.creamWhite)
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                    .stroke(isInvalid ? Color.red.opacity(0.8) : Palette.outlineLight.opacity(0.25), lineWidth: 1)
+                            )
+                            .onSubmit(onCommit)
+
+                        Button("Apply") {
+                            onCommit()
+                        }
+                        .buttonStyle(SecondaryActionButtonStyle(strokeColor: Palette.outlineLight, fillColor: Palette.backgroundDark))
                     }
-                    .buttonStyle(SecondaryActionButtonStyle(strokeColor: Palette.outlineLight, fillColor: Palette.backgroundDark))
                 }
                 .transition(.opacity)
             }
@@ -325,15 +341,6 @@ private extension ContentView {
         }
     }
 
-    func toggleEditor(_ mode: TimerModel.Mode) {
-        if expandedEditor == mode {
-            expandedEditor = nil
-        } else {
-            expandedEditor = mode
-            editorText[mode] = formattedDuration(for: mode)
-            invalidEditors.remove(mode)
-        }
-    }
 
     func applyDuration(for mode: TimerModel.Mode) {
         let text = editorText[mode] ?? ""
