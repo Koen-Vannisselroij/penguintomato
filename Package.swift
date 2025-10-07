@@ -16,6 +16,10 @@ let package = Package(
                 .process("Assets.xcassets"),
                 .process("Resources")
             ]
+        ),
+        .testTarget(
+            name: "PenguinTomatoTests",
+            dependencies: ["PenguinTomato"]
         )
     ]
 )
