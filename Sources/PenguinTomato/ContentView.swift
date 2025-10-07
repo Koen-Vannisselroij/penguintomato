@@ -35,7 +35,7 @@ struct ContentView: View {
             HStack(alignment: .center, spacing: 16) {
                 Text(model.formattedRemaining)
                     .font(.system(size: 56, weight: .bold, design: .monospaced))
-                    .foregroundColor(.white)
+                    .foregroundColor(Palette.whiteAccent)
                     .shadow(color: .black.opacity(0.35), radius: 6, y: 2)
                     .accessibilityLabel("Remaining time")
 
@@ -154,7 +154,7 @@ private struct PrimaryActionButtonStyle: ButtonStyle {
                 Capsule()
                     .fill(color.opacity(configuration.isPressed ? 0.85 : 1.0))
             )
-            .foregroundColor(.white)
+            .foregroundColor(Palette.whiteAccent)
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
     }
 }
@@ -194,7 +194,7 @@ private struct DestructiveActionButtonStyle: ButtonStyle {
                 Capsule()
                     .fill(color.opacity(opacity(for: configuration)))
             )
-            .foregroundColor(.white.opacity(isEnabled ? 1 : 0.6))
+            .foregroundColor(Palette.whiteAccent.opacity(isEnabled ? 1 : 0.6))
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
     }
 
@@ -437,7 +437,8 @@ private enum Palette {
     static let buttonPrimary = Color(red: 94/255, green: 108/255, blue: 126/255)
     static let buttonSecondary = Color(red: 72/255, green: 84/255, blue: 100/255)
     static let leafGreen = Color(red: 108/255, green: 162/255, blue: 118/255)
-    static let outlineLight = Color.white.opacity(0.7)
-    static let textPrimary = Color.white.opacity(0.92)
+    static let whiteAccent = Color(red: 255/255, green: 246/255, blue: 232/255)
+    static let outlineLight = Palette.whiteAccent.opacity(0.7)
+    static let textPrimary = Palette.whiteAccent.opacity(0.92)
     static let statusIconSize: CGFloat = 84
 }
