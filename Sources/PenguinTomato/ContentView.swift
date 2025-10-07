@@ -35,6 +35,8 @@ struct ContentView: View {
         .tint(accentPrimary)
         .foregroundColor(accentSecondary)
         .onAppear { refreshEditorTexts() }
+        .animation(nil, value: expandedFocus)
+        .animation(nil, value: expandedBreak)
     }
 
     private var penguinCard: some View {
@@ -283,23 +285,7 @@ private struct DisclosureDurationEditor: View {
 
             if isExpanded {
                 VStack(alignment: .leading, spacing: 12) {
-                    TextField("mm:ss", text: $text)
-                        .textFieldStyle(.plain)
-                        .font(.title3.monospacedDigit().weight(.semibold))
-                        .multilineTextAlignment(.center)
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .fill(Palette.creamWhite)
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .stroke(isInvalid ? Color.red.opacity(0.8) : Palette.outlineLight.opacity(0.25), lineWidth: 1)
-                        )
-                        .onSubmit(onCommit)
-
-                            HStack(spacing: 12) {
+                    HStack(spacing: 12) {
                         TextField("mm:ss", text: $text)
                             .textFieldStyle(.plain)
                             .font(.title3.monospacedDigit().weight(.semibold))
@@ -329,21 +315,19 @@ private struct DisclosureDurationEditor: View {
 }
 
 private extension ContentView {
+    @ViewBuilder
     var statusChip: some View {
-        switch model.state {
-        case .running:
-            if model.currentMode == .focus {
-                return AnyView(largePenguinStatus(iconName: "FocusPenguin", title: "Focus"))
-            } else {
-                return AnyView(largePenguinStatus(iconName: "BreakPenguin", title: "Break"))
-            }
-        case .paused:
-            return AnyView(largePenguinStatus(iconName: "PausePenguin", title: "Paused"))
-        case .idle:
-            if model.currentMode == .breakTime {
-                return AnyView(largePenguinStatus(iconName: "BreakPenguin", title: "Break ready"))
-            }
-            return AnyView(largePenguinStatus(iconName: "SleepingPenguin", title: "Idle"))
+        switch (model.state, model.currentMode) {
+        case (.running, .focus):
+            largePenguinStatus(iconName: "FocusPenguin", title: "Focus")
+        case (.running, .breakTime):
+            largePenguinStatus(iconName: "BreakPenguin", title: "Break")
+        case (.paused, _):
+            largePenguinStatus(iconName: "PausePenguin", title: "Paused")
+        case (.idle, .breakTime):
+            largePenguinStatus(iconName: "BreakPenguin", title: "Break ready")
+        case (.idle, _):
+            largePenguinStatus(iconName: "SleepingPenguin", title: "Idle")
         }
     }
 
