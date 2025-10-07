@@ -318,6 +318,22 @@ private extension ContentView {
     
 
 
+    @ViewBuilder
+    var statusChip: some View {
+        switch (model.state, model.currentMode) {
+        case (.running, .focus):
+            largePenguinStatus(iconName: "FocusPenguin", title: "Focus")
+        case (.running, .breakTime):
+            largePenguinStatus(iconName: "BreakPenguin", title: "Break")
+        case (.paused, _):
+            largePenguinStatus(iconName: "PausePenguin", title: "Paused")
+        case (.idle, .breakTime):
+            largePenguinStatus(iconName: "BreakPenguin", title: "Break ready")
+        case (.idle, _):
+            largePenguinStatus(iconName: "SleepingPenguin", title: "Idle")
+        }
+    }
+
     func applyDuration(for mode: TimerModel.Mode) {
         let text = editorText[mode] ?? ""
         guard let seconds = parseDuration(text) else {
