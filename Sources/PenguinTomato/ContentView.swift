@@ -225,6 +225,7 @@ private struct StatusChip: View {
     var iconSystemName: String? = nil
     var assetName: String? = nil
     var textColor: Color = Palette.textPrimary
+    var useBackground: Bool = true
 
     var body: some View {
         HStack(spacing: 8) {
@@ -243,11 +244,13 @@ private struct StatusChip: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
-        .background(
-            Capsule()
-                .fill(color)
-        )
         .foregroundColor(textColor)
+        .background {
+            if useBackground {
+                Capsule()
+                    .fill(color)
+            }
+        }
     }
 }
 
@@ -371,7 +374,7 @@ private extension ContentView {
             if model.currentMode == .breakTime {
                 return AnyView(largePenguinStatus(iconName: "BreakPenguin", title: "Break ready", size: 72))
             }
-            return AnyView(StatusChip(text: "Idle", color: Palette.backgroundDark.opacity(0.6), assetName: "SleepingPenguin", textColor: Palette.textPrimary))
+            return AnyView(StatusChip(text: "Idle", color: Palette.backgroundDark.opacity(0.6), assetName: "SleepingPenguin", textColor: Palette.textPrimary, useBackground: false))
         }
     }
 
