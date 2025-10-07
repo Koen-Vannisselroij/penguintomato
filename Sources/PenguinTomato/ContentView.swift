@@ -8,7 +8,7 @@ struct ContentView: View {
     private let accentSecondary = Palette.textPrimary
     private let cardBackground = Palette.creamWhite.opacity(0.85)
 
-    @State private var expandedEditor: TimerModel.Mode? = .focus
+    @State private var expandedEditor: TimerModel.Mode? = nil
     @State private var editorText: [TimerModel.Mode: String] = [:]
     @State private var invalidEditors: Set<TimerModel.Mode> = []
 
