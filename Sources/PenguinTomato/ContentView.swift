@@ -32,24 +32,24 @@ struct ContentView: View {
 
     private var penguinCard: some View {
         VStack(spacing: 12) {
-            Text(model.formattedRemaining)
-                .font(.system(size: 56, weight: .bold, design: .monospaced))
-                .foregroundColor(.white)
-                .shadow(color: .black.opacity(0.35), radius: 6, y: 2)
-                .accessibilityLabel("Remaining time")
+            HStack(alignment: .center, spacing: 16) {
+                Text(model.formattedRemaining)
+                    .font(.system(size: 56, weight: .bold, design: .monospaced))
+                    .foregroundColor(.white)
+                    .shadow(color: .black.opacity(0.35), radius: 6, y: 2)
+                    .accessibilityLabel("Remaining time")
 
-            HStack(spacing: 8) {
                 modeIcon(for: model.currentMode)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: Palette.statusIconSize, height: Palette.statusIconSize)
-
-                Text(model.currentMode.displayName)
-                    .font(.headline)
-                    .foregroundColor(accentSecondary)
             }
-    }
-    .padding(.vertical, 12)
+
+            Text("\(model.currentMode.displayName) phase")
+                .font(.headline)
+                .foregroundColor(accentSecondary)
+        }
+        .padding(.vertical, 12)
     }
 
     @ViewBuilder
