@@ -19,17 +19,18 @@ struct ContentView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 24) {
-                penguinCard
-                durationSection
-            }
-            .padding(.horizontal, 24)
-            .padding(.top, 24)
-            .frame(width: 360)
-
-            controlSection
+                VStack(spacing: 24) {
+                    penguinCard
+                    durationSection
+                }
                 .padding(.horizontal, 24)
-                .padding(.bottom, 24)
-                .frame(width: 360)
+                .padding(.top, 24)
+
+                controlSection
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 24)
+            }
+            .frame(width: 360)
         }
         .tint(accentPrimary)
         .foregroundColor(accentSecondary)
