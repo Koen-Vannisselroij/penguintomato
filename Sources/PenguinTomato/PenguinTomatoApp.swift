@@ -30,7 +30,7 @@ struct PenguinTomatoApp: App {
 private extension PenguinTomatoApp {
     var menuBarIcon: Image {
         let name = model.menuBarIconName
-        if let nsImage = Bundle.module.image(forResource: name) {
+        if let nsImage = Bundle.module.penguinImage(named: name) {
             nsImage.isTemplate = true
             nsImage.size = NSSize(width: 22, height: 22)
             return Image(nsImage: nsImage)
