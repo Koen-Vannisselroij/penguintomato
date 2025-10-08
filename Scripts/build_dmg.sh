@@ -3,6 +3,52 @@ set -euo pipefail
 
 # Builds PenguinTomato via Swift Package Manager and produces a DMG.
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "python3 not found. It is required for path safety checks." >&2
+  exit 1
+fi
+
+safe_rm_rf() {
+  for target in "$@"; do
+    if [[ -z "$target" ]]; then
+      echo "Refusing to remove an empty path" >&2
+      exit 1
+    fi
+
+    local resolved
+    resolved=$(python3 -c 'import os, sys; print(os.path.realpath(sys.argv[1]))' "$target") || {
+      echo "Failed to resolve path: $target" >&2
+      exit 1
+    }
+
+    case "$resolved" in
+      "/"|"" )
+        echo "Refusing to remove root directory" >&2
+        exit 1
+        ;;
+      "$REPO_ROOT"|"$REPO_ROOT"/*)
+        if [[ "$resolved" == "$REPO_ROOT" ]]; then
+          echo "Refusing to remove the repository root" >&2
+          exit 1
+        fi
+        ;;
+      *)
+        echo "Refusing to remove path outside repository: $resolved" >&2
+        exit 1
+        ;;
+    esac
+
+    if [[ -e "$resolved" ]]; then
+      rm -rf "$resolved"
+    fi
+  done
+}
+
+cd "$REPO_ROOT"
+
 if ! command -v swift >/dev/null 2>&1; then
   echo "swift not found. Install Xcode command line tools first." >&2
   exit 1
@@ -38,10 +84,10 @@ DMG_PATH="$DIST_DIR/$DMG_NAME"
 
 if [[ "$SHOULD_CLEAN" =~ ^[Yy]$ ]]; then
   echo "\n▶︎ Cleaning previous build artifacts"
-  rm -rf "$BUILD_DIR" "$DIST_DIR"
+  safe_rm_rf "$BUILD_DIR" "$DIST_DIR"
 fi
 
-rm -rf "$STAGE_DIR"
+safe_rm_rf "$STAGE_DIR"
 mkdir -p "$DIST_DIR"
 
 if [ ! -x "$BINARY_PATH" ]; then
