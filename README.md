@@ -30,32 +30,30 @@ There is not really a reason, I like penguins and needed a pomodoro timer that I
 
 The tests focus on `TimerModel`, ensuring session transitions, clamping logic, and menu bar messaging behave consistently across machines.
 
+## Packaging a DMG
+For quick sharing you don’t need to archive from Xcode—run the helper script in `Scripts/build_dmg.sh` instead:
+
+```bash
+./Scripts/build_dmg.sh
+```
+
+The script will prompt you for:
+- a version label (used in the DMG/staging folder names)
+- whether to clean previous `.build/` and `dist/` outputs
+- whether to ad-hoc sign the bundle (useful so Gatekeeper only shows the standard “unverified developer” prompt)
+
+When it completes you’ll have:
+- `.build/PenguinTomato-<version>-staging/PenguinTomato.app`
+- `dist/PenguinTomato-<version>.dmg`
+
+Ship the DMG, and remind recipients to Control-click → **Open** the first time. For convenience, reference artwork that we don’t ship lives in `Assets/ReferenceArt/` and the full-resolution icon source in `Assets/IconSource/`.
+
 ## Assets
-The penguin illustrations and sound live under `Sources/PenguinTomato/Resources/`. They are referenced directly by the Swift Package, so there is no need to copy or relocate them when building or distributing the app.
-
-- `focussed_penguin.png` — focus session badge.
-- `break_penguin.png` — break-time mascot.
-- `pause_penguin.png` — pause state artwork.
-- `sleeping_penguin.png` — idle indicator.
-- `emperor_penguin_trumpet.mp3` — celebratory completion jingle.
-
-## Distributing to Friends
-1. Archive the app from Xcode (`Product > Archive`) using a Developer ID certificate.
-2. Notarize the resulting build (`xcrun notarytool submit --wait`).
-3. Staple the notarization ticket (`xcrun stapler staple PenguinTomato.app`).
-4. Share the signed `.app` or `.dmg`; recipients on other Macs can open it without Gatekeeper warnings.
-
-If you prefer TestFlight-style distribution, create a Swift package release or host the notarized build on a trusted file share.
-
-## Contributing
-Questions, feature ideas, or penguin art contributions are welcome! Fork the repository, create a branch, and submit a pull request with a clear description and screenshots where relevant.
-
-## License
-This project currently has no explicit license. Please treat it as all rights reserved until a license is added.
+Runtime images are bundled through `Sources/PenguinTomato/Assets.xcassets`, so everything loads via `Bundle.module`. The original PNGs are kept for reference under `Assets/ReferenceArt/`, and the menu bar/App icon source lives in `Assets/IconSource/`. The audio cue remains at `Sources/PenguinTomato/Resources/emperor_penguin_trumpet.mp3`.
 
 <p align="center">
-  <img src="Sources/PenguinTomato/Resources/focussed_penguin.png" alt="Focus penguin" width="150" style="margin:0 10px;" />
-  <img src="Sources/PenguinTomato/Resources/break_penguin.png" alt="Break penguin" width="150" style="margin:0 10px;" />
-  <img src="Sources/PenguinTomato/Resources/pause_penguin.png" alt="Pause penguin" width="150" style="margin:0 10px;" />
-  <img src="Sources/PenguinTomato/Resources/sleeping_penguin.png" alt="Sleeping penguin" width="150" style="margin:0 10px;" />
+  <img src="Assets/ReferenceArt/focussed_penguin.png" alt="Focus penguin" width="150" style="margin:0 10px;" />
+  <img src="Assets/ReferenceArt/break_penguin.png" alt="Break penguin" width="150" style="margin:0 10px;" />
+  <img src="Assets/ReferenceArt/pause_penguin.png" alt="Pause penguin" width="150" style="margin:0 10px;" />
+  <img src="Assets/ReferenceArt/sleeping_penguin.png" alt="Sleeping penguin" width="150" style="margin:0 10px;" />
 </p>
